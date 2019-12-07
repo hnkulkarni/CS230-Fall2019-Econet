@@ -144,13 +144,38 @@ intersection = base_{mask} \bigcap target_{mask}
 union = base_{mask} \bigcup target_{mask}
 \end{equation}
 
-
 \begin{equation}
 collage_{loss} = \frac{intersection}{union}
 \end{equation}
 
+For every ground truth, we define following anchor points by defining a grid over the image, and then finding the above loss function for each of these points. 
 
+\begin{equation}
+anchor_{loss} = 
+\begin{bmatrix}
+l_{1} l_{2} l_{3} \ldots 
+\end{bmatrix}
+\end{equation}
 
+\begin{equation}
+    optimal_{anchor} = argmin(anchor_{loss})
+\end{equation}
+
+We use this optimal anchor point as the ground truth for our learning the optimal place for placing the target. A sample output looks like this 
+
+\begin{figure}
+
+    \begin{subfigure}{0.2\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4/optimization_network.png}
+     \caption{Optimization Network}
+  \end{subfigure}
+  \begin{subfigure}{\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4/collage_optimization_output.png}
+    \caption{Collage of learned network}
+  \end{subfigure}
+ 
+    \label{fig:my_label}
+\end{figure}
 
 
 % Learning homography transforms using STN
