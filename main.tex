@@ -65,23 +65,42 @@ In this report, we experimented with different sizes of ResNet, and choose ResNe
 
 \section{Related work}
 
-\cite{1CyclePolicy}
-
-\citep{yang2016classification} and \cite{chu2018multilayer} in describe network architectures based on AlexNet. We found the following limitations in these approaches: Images used for testing in [1] and [2] have only one object per image.  
+\citep{yang2016classification} and \cite{chu2018multilayer} in describe network architectures based on AlexNet. We found the following limitations in these approaches: Images used for testing in \citep{yang2016classification} and \cite{chu2018multilayer} have only one object per image.  
 Misclassification of certain classes of objects (e.g., misclassifying cylindrical objects as recyclable objects). 
-Cenk Bircanoglu et. al in [3] uses MobileNet, a streamlined architecture which can be used in smart devices. This idea is useful as we also want to deploy our network on smartphones. 
+Cenk Bircanoglu et. al in \cite{bircanouglu2018recyclenet} uses MobileNet, a streamlined architecture which can be used in smart devices. This idea is useful as we also want to deploy our network on smartphones. 
 
 
 
 \section{Dataset and Features}
-We use TrashNet[4] dataset as the baseline. This dataset has 6 labelled classes (Glass, Paper, Cardboard, Plastic, Metal, Trash). We augment this dataset by adding more categories (mentioned in Problem Statement) to it.  After we collect more data (by taking photos with our smartphones) and ensure that our data is preprocessed to match the resolution of TrashNet[4] dataset. 
+We use TrashNet \citep{yang2016classification} dataset as the baseline. This dataset has 6 labelled classes (Glass, Paper, Cardboard, Plastic, Metal, Trash). We augment this dataset by adding more categories (mentioned in Problem Statement) to it.  After we collect more data (by taking photos with our smartphones) and ensure that our data is preprocessed to match the resolution of TrashNet[4] dataset. 
 
 
 
 \section{ Methods }
 
+\subsection{Generating Collages}
+
+\subsubsection{Random Collage Generation}
+We have a hand labeled collage generated. 
+
+%Add figure over here
+
+\subsubsection{Learned Collage}
+% Add 2 branch network
+% Learning homography transforms using STN
+
+\subsubsection{Blending collages}
+% Add GP-GAN over here
+
+
 
 \section{Experiments/Results/Discussion}
+
+
+
+
+
+%From format
 You should also give details about what (hyper)parameters you chose (e.g. why did you
 use X learning rate for gradient descent, what was your mini-batch size and why) and how
 you chose them. What your primary metrics are: accuracy, precision,
