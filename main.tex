@@ -1,0 +1,128 @@
+\documentclass{article}
+\usepackage[final]{nips_2017}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{graphicx}
+ 
+\title{Waste Object Detection and Classification}
+
+\author{
+ Hrushikesh N. Kulkarni\\
+  Department of Computer Science\\
+  Stanford University\\
+  \texttt{hrushi@stanford.edu} \\
+  %% examples of more authors
+  \And
+  Nandini Kannamangalam Sundara Raman\\
+  Department of Computer Science\\
+  Stanford University\\
+  \texttt{nandini9@stanford.edu} \\
+  %% examples of more authors
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+}
+
+\begin{document}
+% \nipsfinalcopy is no longer used
+
+\begin{center}
+\includegraphics[width=3cm, height=0.7cm]{CS230}
+\end{center}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Introduction}	
+Improper waste management has severe effects on our environment, natural resources and public health. In our project we take pictures of waste items and output semantic labels detecting and classifying the objects.
+In this report, we experimented with different sizes of ResNet, and choose ResNet34 as it gave optimal accuracy of 93\%. Later for object localization, we used Faster RCNN with Inception V2 as the backbone network.
+
+\section{Related work}
+
+\cite{1CyclePolicy}
+
+\citep{yang2016classification} and \cite{chu2018multilayer} in describe network architectures based on AlexNet. We found the following limitations in these approaches: Images used for testing in [1] and [2] have only one object per image.  
+Misclassification of certain classes of objects (e.g., misclassifying cylindrical objects as recyclable objects). 
+Cenk Bircanoglu et. al in [3] uses MobileNet, a streamlined architecture which can be used in smart devices. This idea is useful as we also want to deploy our network on smartphones. 
+
+
+
+\section{Dataset and Features}
+We use TrashNet[4] dataset as the baseline. This dataset has 6 labelled classes (Glass, Paper, Cardboard, Plastic, Metal, Trash). We augment this dataset by adding more categories (mentioned in Problem Statement) to it.  After we collect more data (by taking photos with our smartphones) and ensure that our data is preprocessed to match the resolution of TrashNet[4] dataset. 
+
+
+
+\section{ Methods }
+
+
+\section{Experiments/Results/Discussion}
+You should also give details about what (hyper)parameters you chose (e.g. why did you
+use X learning rate for gradient descent, what was your mini-batch size and why) and how
+you chose them. What your primary metrics are: accuracy, precision,
+AUC, etc. Provide equations for the metrics if necessary. For results, you want to have a
+mixture of tables and plots. If you are solving a classification problem, you should include a
+confusion matrix or AUC/AUPRC curves. Include performance metrics such as precision,
+recall, and accuracy. For regression problems, state the average error. You should have
+both quantitative and qualitative results. To reiterate, you must have both quantitative
+and qualitative results! If it applies: include visualizations of results, heatmaps,
+examples of where your algorithm failed and a discussion of why certain algorithms failed
+or succeeded. In addition, explain whether you think you have overfit to your training set
+and what, if anything, you did to mitigate that. Make sure to discuss the figures/tables in
+your main text throughout this section. Your plots should include legends, axis labels, and
+have font sizes that are legible when printed.
+
+\section{Conclusion/Future Work }
+Summarize your report and reiterate key points. Which algorithms were the highestperforming?
+Why do you think that some algorithms worked better than others? For
+future work, if you had more time, more team members, or more computational resources,
+what would you explore?
+
+\section{Contributions}
+The contributions section is not included in the 5 page limit. This section should describe
+what each team member worked on and contributed to the project.
+
+\section*{References}
+This section should include citations for: (1) Any papers mentioned in the related work
+section. (2) Papers describing algorithms that you used which were not covered in class.
+(3) Code or libraries you downloaded and used. This includes libraries such as scikit-learn, Tensorflow, Pytorch, Keras etc. Acceptable formats include: MLA, APA, IEEE. If you
+do not use one of these formats, each reference entry must include the following (preferably
+in this order): author(s), title, conference/journal, publisher, year. If you are using TeX,
+you can use any bibliography format which includes the items mentioned above. We are excluding
+the references section from the page limit to encourage students to perform a thorough
+literature review/related work section without being space-penalized if they include more
+references. Any choice of citation style is acceptable
+as long as you are consistent. 
+
+\medskip
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
