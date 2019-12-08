@@ -85,15 +85,28 @@ We use TrashNet \citep{yang2016classification} dataset as the baseline. This dat
 \subsection{Generating Collages}
 
 \subsubsection{Random Collage Generation}
-We have a hand labeled collage generated. 
 
+We have a hand labeled collage generated. 
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.3\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4_random_collage/Output_1.png}
+    \caption{Detection and Localization Output}
+    \end{subfigure}
+    \begin{subfigure}{0.3\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4_random_collage/Output_2.png}
+    \caption{Detection and Localization Output}
+    \end{subfigure}
+    
+    \label{fig:random_collage}
+\end{figure}
 
 
 %Add figure over here
 
 \subsubsection{Learned Collage}
 % Add 2 branch network
-Here we try to pose the problem of generating collage as a Knapsack problem. We want to optimize the collage such that the overlap between the two images is minimized. To do this we first get foreground masks of the original image. Since the images in the dataset are not centered, we register all the images such that the bounding box starts at the top left corner. We find out the $t_{x}$ and $t_{y}$  from the top left corner of the bounding box. Later by affine transform, we translate the image such that the top left corner is $(0,0)$.  
+Here we try to pose the problem of generating collage as a Knapsack problem. We want to optimize the collage such that the overlap between the two images is minimized. To do this we first get foreground masks of the original image. Since the images in the dataset are not centered, we register all the images such that the bounding box starts at the top left corner. We find out the $t_{x}$ and $t_{y}$  from the top left corner of the bounding box. Later by affine transform, we translate the image such that the top left corner is $(0,0)$. Note we have negated the values of  $t_{x}$ and $t_{y}$  to so that the output moves to the top left.
 
 \begin{equation}
 \begin{bmatrix}
@@ -115,23 +128,23 @@ y\\
 \begin{figure}[h!]
   \centering
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4/base_original.png}
+    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/base_original.png}
      \caption{Original Image}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4/original_mask.png}
+    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/original_mask.png}
     \caption{Registered mask}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4/original_target.png}
+    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/original_target.png}
     \caption{Image to collage}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4/target_mask.png}
+    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/target_mask.png}
     \caption{Registered mask}
   \end{subfigure}
   \caption{Collecting the data to set up the problem}
-  \label{fig:coffee3}
+  \label{fig:learning_collages}
 \end{figure}
 
 
@@ -161,29 +174,100 @@ l_{1} l_{2} l_{3} \ldots
     optimal_{anchor} = argmin(anchor_{loss})
 \end{equation}
 
-We use this optimal anchor point as the ground truth for our learning the optimal place for placing the target. A sample output looks like this 
+We use this optimal anchor point as the ground truth for our learning the optimal place for placing the target. A sample output is shown on page \pageref{fig:learned_collage_output}
 
 \begin{figure}
 
     \begin{subfigure}{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4/optimization_network.png}
+    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/optimization_network.png}
      \caption{Optimization Network}
   \end{subfigure}
-  \begin{subfigure}{\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4/collage_optimization_output.png}
+  \begin{subfigure}{0.7\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/collage_optimization_output.png}
     \caption{Collage of learned network}
   \end{subfigure}
- 
-    \label{fig:my_label}
+    \label{fig:learned_collage_output}
+    \caption{Learned network and sample output collage}
 \end{figure}
+
+Though this approach was promising at first, it did not work for the following reasons. 
+
+\begin{itemize}
+    \item Since we registered the images, the output location was always the same. All generated collages looked very similar. 
+\end{itemize}
+
 
 
 % Learning homography transforms using STN
 
 \subsubsection{Blending collages}
-% Add GP-GAN over here
+To blend different masks on a collage we experimented with a pre-trained GP-GAN \cite{wu2019gp}. A sample output can be seen in \pageref{fig:GAN_Blending}
+
+
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/cardboard254.jpg}
+     \caption{Original Image}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/mask_display.png}
+    \caption{Mask to blend}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/metal14.jpg}
+    \caption{Target Image to Blend}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.2\linewidth}
+    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/result-cardboard331-metal14.png}
+    \caption{Result blend}
+  \end{subfigure}
+  \caption{Collecting the data to set up the problem}
+  \label{fig:GAN_Blending}
+\end{figure}
+
+
 
 \subsection{Individual Images}
+% TO BE ADDED
+
+\section{Classification of Objects}
+TrashNet \cite{yang2016classification} reports only 63\% accuracy for classification on the test set, this can be mainly attributed to its comparatively simple CNN model. We reproduced the results from \cite{CollinChing} where ResNet34 was used to do classification of objects in TrashNet dataset  \cite{yang2016classification} and got better results than \cite{CollinChing}. 
+
+As ResNet \cite{he2016deep} performs better on image classification tasks, we applied transfer learning on ResNet models with weights pre-trained on ImageNet dataset as a baseline. We froze all the layers except the fully connected layers at the top, and the network was finetuned to TrashNet dataset. 
+
+We experimented with different number of layers of ResNet. We noticed that using deeper ResNet does not yield significant improvements in test set accuracy and concluded that ResNet34 was a good sweet spot. 
+
+We used FastAI \cite{howard2018fastai} library to search for an optimum learning rate and fit using one cycle optimization algorithm \cite{1CyclePolicy}. The plots of losses and other metrics are shown below. 
+
+\subsection{Hybrid Transfer Learning}
+We use a Hybrid approach to Transfer Learning from \cite{geron2019hands}. For trying this out, we start with pretrained models on image net. Then add a Global Average Pooling layer, followed by Batch Normalization, then Dense output layer. We start by freezing all base layers, and training the output layer by a large learning rate, then after a few epochs, we 
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{Learned Model }
+ base =  pretrained model \;
+ 
+ avg = GlobalAveragePooling(base) \\
+ reg = BatchNormalization(avg)
+ output = Dense(number of classes, activation="softmax", input=reg)
+
+ Freeze base layers of the downloaded model\;
+
+ \While{epochs < 10}{
+ train the model with a very high learning rate; 
+ }
+ 
+ Unfreeze all base layers; 
+ 
+ \While{epochs < 100}{
+ train the model with a very low learning rate; 
+ }
+ \caption{Hybrid transfer learning}
+\end{algorithm}
+
+The advantage of this approach is that it does not change the weights of the base layers drastically in the first few epochs when the last few layers have not yet stabalized. 
 
 \section{Experiments/Results/Discussion}
 
@@ -193,10 +277,20 @@ We use this optimal anchor point as the ground truth for our learning the optima
     \item LR-Find
     \item LL Decay
     \item Reduce Learning Rate on Plateau
+    \item Learning Rate Schedule
+    
 \end{itemize}
 
+Comparison between different classification algorithms
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{data/images/Section_5_Comparision/Classification_plot.png}
+    \caption{Comparing of validation accuracy between different classification learning algorithms. \cite{Zoph_2018}  \cite{Huang_2017} \cite{howard2017mobilenets} \cite{he2016deep} \cite{simonyan2014deep} \cite{chollet2017xception} }
+    \label{fig:my_label}
+\end{figure}
 
+We can see that the DenseNet has the highest validation accuracy. We also see different number of epochs, this is because we are using EarlyStopping \cite{geron2019hands}, hence if the validation accuracy does not imporve we stop the training to save time and compute resources. 
 
 
 
