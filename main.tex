@@ -12,7 +12,9 @@
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage[ruled,vlined]{algorithm2e}
- \usepackage{amsmath}
+\usepackage{amsmath}
+\usepackage[numbers]{natbib}
+
 
 \title{Waste Object Detection and Classification}
 
@@ -64,37 +66,57 @@
 \end{abstract}
 
 \section{Introduction}	
-Improper waste management has severe effects on our environment, natural resources and public health. In our project we take pictures of waste items and output semantic labels detecting and classifying the objects.
-In this report, we experimented with different sizes of ResNet, and choose ResNet34 as it gave optimal accuracy of 93\%. Later for object localization, we used Faster RCNN with Inception V2 as the backbone network.
+Improper waste management has severe effects on our environment, natural resources and public health. We want to educate users to be more mindful of recycling throwaway items, so that we can reduce the contamination at the source. We use pictures of different throwaway items from \cite{yang2016classification} and train a classifier to output a label which is a type of the object. Knowing the labels, the user can make a sound decision if it has to be recycled. 
+
+In our report we discuss innovative ways to augment the dataset, and present a object detection mechanism which as been trained on different throwaway classes. We also experiment different hyper-parameters for these learning algorithm and present a summary.
 
 \section{Related work}
 
-\citep{yang2016classification} and \cite{chu2018multilayer} in describe network architectures based on AlexNet. We found the following limitations in these approaches: Images used for testing in \citep{yang2016classification} and \cite{chu2018multilayer} have only one object per image.  
-Misclassification of certain classes of objects (e.g., misclassifying cylindrical objects as recyclable objects). 
-Cenk Bircanoglu et. al in \cite{bircanouglu2018recyclenet} uses MobileNet, a streamlined architecture which can be used in smart devices. This idea is useful as we also want to deploy our network on smartphones. 
+Object detection and classification approaches for throwaway items is a well studied topic. \citeauthor{yang2016classification} and \citeauthor{chu2018multilayer} use a AlexNet \cite{krizhevsky2012imagenet} like architectures, and have very poor accuracy. \cite{yang2016classification}, their classifier was confused between plastic and glass categories. 
+
+To have more robust classification we experiment with different classifiers notebely ResNet by \citeauthor{he2016deep}, Inception by \citeauthor{szegedy2017inception}, Xception and Xception by \citeauthor{chollet2017xception}. Because of the skip connection mechanism in \cite{he2016deep} we find that the ResNet worked the best. 
+
+
+% \citep{yang2016classification} and \cite{chu2018multilayer} in describe network architectures based on AlexNet. But they have We found the following limitations in these approaches: Images used for testing in \citep{yang2016classification} and \cite{chu2018multilayer} have only one object per image.  
+% Misclassification of certain classes of objects (e.g., misclassifying cylindrical objects as recyclable objects). 
+% Cenk Bircanoglu et. al in \cite{bircanouglu2018recyclenet} uses MobileNet, a streamlined architecture which can be used in smart devices. This idea is useful as we also want to deploy our network on smartphones. 
 
 
 
 \section{Dataset and Features}
-We use TrashNet \citep{yang2016classification} dataset as the baseline. This dataset has 6 labelled classes (Glass, Paper, Cardboard, Plastic, Metal, Trash). We augment this dataset by adding more categories (mentioned in Problem Statement) to it.  After we collect more data (by taking photos with our smartphones) and ensure that our data is preprocessed to match the resolution of TrashNet[4] dataset. 
+We use TrashNet \citep{yang2016classification} dataset as the baseline. This is a balanced dataset and has approx 400 images of 6 different labelled classes (Glass, Paper, Cardboard, Plastic, Metal, Trash).  We divide the dataset into train \/ validation \/ test as (60/20/20). The resolution of the input data is $512 \times 384 \times 3$.
 
+We augment this dataset by adding operations like flipping, rotation, sheering, etc.  Since the dataset has only one object in a image, we augument this by making a array of collage as mentioned in Sec. \ref{sec:GeneratingCollage}. 
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{data/images/03_Dataset/train_sample.png}
+    \caption{Sample Training Set from the TrashNet Dataset \cite{yang2016classification}}
+    \label{fig:TrainSample}
+\end{figure}
 
 \section{ Methods }
+In this section, we describe different ways to generate a collage, and methods for classifying and localizing objects in a image. 
 
-\subsection{Generating Collages}
+\subsection{Single Object in a Images}
+This is a baseline, a image has only single object. We take a single image and 
+
+\subsection{Multiple Objects in a Image}
+\label{sec:GeneratingCollage}
 
 \subsubsection{Random Collage Generation}
+We have a hand labelled masks of foregrounds 
 
-We have a hand labeled collage generated. 
+
+
 \begin{figure}
     \centering
     \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_random_collage/Output_1.png}
+    \includegraphics[width=\linewidth]{data/images/04_random_collage/Output_1.png}
     \caption{Detection and Localization Output}
     \end{subfigure}
     \begin{subfigure}{0.3\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_random_collage/Output_2.png}
+    \includegraphics[width=\linewidth]{data/images/04_random_collage/Output_2.png}
     \caption{Detection and Localization Output}
     \end{subfigure}
     
@@ -128,19 +150,19 @@ y\\
 \begin{figure}[h!]
   \centering
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/base_original.png}
+    \includegraphics[width=\linewidth]{data/images/04_Learned_Collage/base_original.png}
      \caption{Original Image}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/original_mask.png}
+    \includegraphics[width=\linewidth]{data/images/04_Learned_Collage/original_mask.png}
     \caption{Registered mask}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/original_target.png}
+    \includegraphics[width=\linewidth]{data/images/04_Learned_Collage/original_target.png}
     \caption{Image to collage}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/target_mask.png}
+    \includegraphics[width=\linewidth]{data/images/04_Learned_Collage/target_mask.png}
     \caption{Registered mask}
   \end{subfigure}
   \caption{Collecting the data to set up the problem}
@@ -179,11 +201,11 @@ We use this optimal anchor point as the ground truth for our learning the optima
 \begin{figure}
 
     \begin{subfigure}{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/optimization_network.png}
+    \includegraphics[width=\linewidth]{data/images/04_Learned_Collage/optimization_network.png}
      \caption{Optimization Network}
   \end{subfigure}
   \begin{subfigure}{0.7\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_Learned_Collage/collage_optimization_output.png}
+    \includegraphics[width=\linewidth]{data/images/04_Learned_Collage/collage_optimization_output.png}
     \caption{Collage of learned network}
   \end{subfigure}
     \label{fig:learned_collage_output}
@@ -208,29 +230,25 @@ To blend different masks on a collage we experimented with a pre-trained GP-GAN 
 \begin{figure}
   \centering
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/cardboard254.jpg}
+    \includegraphics[width=\linewidth]{data/images/04_GP_GAN/cardboard254.jpg}
      \caption{Original Image}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/mask_display.png}
+    \includegraphics[width=\linewidth]{data/images/04_GP_GAN/mask_display.png}
     \caption{Mask to blend}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/metal14.jpg}
+    \includegraphics[width=\linewidth]{data/images/04_GP_GAN/metal14.jpg}
     \caption{Target Image to Blend}
   \end{subfigure}
   \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{data/images/section_4_GP_GAN/result-cardboard331-metal14.png}
+    \includegraphics[width=\linewidth]{data/images/04_GP_GAN/result-cardboard331-metal14.png}
     \caption{Result blend}
   \end{subfigure}
   \caption{Collecting the data to set up the problem}
   \label{fig:GAN_Blending}
 \end{figure}
 
-
-
-\subsection{Individual Images}
-% TO BE ADDED
 
 \section{Classification of Objects}
 TrashNet \cite{yang2016classification} reports only 63\% accuracy for classification on the test set, this can be mainly attributed to its comparatively simple CNN model. We reproduced the results from \cite{CollinChing} where ResNet34 was used to do classification of objects in TrashNet dataset  \cite{yang2016classification} and got better results than \cite{CollinChing}. 
@@ -267,7 +285,7 @@ We use a Hybrid approach to Transfer Learning from \cite{geron2019hands}. For tr
  \caption{Hybrid transfer learning}
 \end{algorithm}
 
-The advantage of this approach is that it does not change the weights of the base layers drastically in the first few epochs when the last few layers have not yet stabalized. 
+The advantage of this approach is that it does not change the weights of the base layers drastically in the first few epochs when the last few layers have not yet stabilized. 
 
 \section{Experiments/Results/Discussion}
 
@@ -285,7 +303,7 @@ Comparison between different classification algorithms
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{data/images/Section_5_Comparision/Classification_plot.png}
+    \includegraphics[width=\linewidth]{data/images/05_Comparision/Classification_plot.png}
     \caption{Comparing of validation accuracy between different classification learning algorithms. \cite{Zoph_2018}  \cite{Huang_2017} \cite{howard2017mobilenets} \cite{he2016deep} \cite{simonyan2014deep} \cite{chollet2017xception} }
     \label{fig:my_label}
 \end{figure}
@@ -293,6 +311,15 @@ Comparison between different classification algorithms
 We can see that the DenseNet has the highest validation accuracy. We also see different number of epochs, this is because we are using EarlyStopping \cite{geron2019hands}, hence if the validation accuracy does not imporve we stop the training to save time and compute resources. 
 
 
+\begin{tabular}{lrrrrrrrrr}
+\toprule{} &  cardboard &      glass &      metal &      paper &    plastic &  trash &  accuracy &   macro avg &  weighted avg \\
+\midrule
+precision &   0.130435 &   0.129032 &   0.148936 &   0.196429 &   0.272727 &    0.0 &   0.16092 &    0.146260 &      0.152524 \\
+recall    &   0.120000 &   0.160000 &   0.269231 &   0.354839 &   0.081081 &    0.0 &   0.16092 &    0.164192 &      0.160920 \\
+f1-score  &   0.125000 &   0.142857 &   0.191781 &   0.252874 &   0.125000 &    0.0 &   0.16092 &    0.139585 &      0.138775 \\
+support   &  25.000000 &  25.000000 &  26.000000 &  31.000000 &  37.000000 &   30.0 &   0.16092 &  174.000000 &    174.000000 \\
+\bottomrule
+\end{tabular}
 
 %From format ------- TO BE REMOVED
 You should also give details about what (hyper)parameters you chose (e.g. why did you
@@ -349,7 +376,7 @@ as long as you are consistent.
 \medskip
 
 
-\bibliographystyle{IEEEtran}
+\bibliographystyle{apalike} %other styles produce (author?)
 \bibliography{references}
 
 \end{document}
